@@ -8,20 +8,20 @@ import {
   floorsLayer,
   wallsLayer,
 } from '../layers';
-import FeatureFilter from '@arcgis/core/layers/support/FeatureFilter';
+
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import am5themes_Responsive from '@amcharts/amcharts5/themes/Responsive';
-import Query from '@arcgis/core/rest/support/Query';
 import '../App.css';
 import {
+  buildingLayerCategory,
   generateChartData,
   generateTotalProgress,
+  layerVisibleTrue,
   thousands_separators,
   zoomToLayer,
 } from '../Query';
-import { dropdownData } from '../dropdownData';
 
 // Dispose function
 function maybeDisposeRoot(divId: any) {
@@ -52,30 +52,6 @@ const Chart = (props: any) => {
     zoomToLayer(stFramingLayer);
   }, [props.station]);
 
-  // type
-  const types = [
-    {
-      category: 'St.Foundation',
-      value: 1,
-    },
-    {
-      category: 'Pile Cap',
-      value: 2,
-    },
-    {
-      category: 'Pier',
-      value: 3,
-    },
-    {
-      category: 'Pier Head',
-      value: 4,
-    },
-    {
-      category: 'Precast',
-      value: 5,
-    },
-  ];
-
   // Define parameters
   const marginTop = 0;
   const marginLeft = 0;
@@ -94,9 +70,6 @@ const Chart = (props: any) => {
   const xAxisLabelFontSize = '0.8vw';
   const legendFontSize = '0.8vw';
 
-  const chartIconWidth = 35;
-  const chartIconHeight = 35;
-  const chartIconPositionX = -21;
   const chartPaddingRightIconLabel = 10;
 
   const chartSeriesFillColorComp = '#0070ff';
@@ -268,196 +241,61 @@ const Chart = (props: any) => {
       });
 
       // Click event
-      const find = dropdownData.find((emp: any) => emp.name === props.station);
-      const stationValue = find?.value;
+      // const find = dropdownData.find((emp: any) => emp.name === props.station);
+      // const stationValue = find?.value;
 
       series.columns.template.events.on('click', (ev) => {
-        const selectedStatus: number | null =
-          fieldName === 'comp' ? (fieldName === 'incomp' ? 1 : 4) : fieldName === 'delay' ? 3 : 1;
+        const selected: any = ev.target.dataItem?.dataContext;
+        const categorySelect: string = selected.category;
+        // const selectedStatus: number | null =
+        //   fieldName === 'comp' ? (fieldName === 'incomp' ? 1 : 4) : fieldName === 'delay' ? 3 : 1;
 
-        const queryExpression =
-          // eslint-disable-next-line no-useless-concat
-          "Station = '" + stationValue + ' AND ' + 'Status = ' + selectedStatus;
-        // stColumnLayer.definitionExpression = queryExpression;
-        // stFoundationLayer.definitionExpression = queryExpression;
-        // stFramingLayer.definitionExpression = queryExpression;
-        // floorsLayer.definitionExpression = queryExpression;
-        // wallsLayer.definitionExpression = queryExpression;
+        if (categorySelect === buildingLayerCategory[0]) {
+          stFoundationLayer.visible = true;
+          stFramingLayer.visible = false;
+          stColumnLayer.visible = false;
+          columnsLayer.visible = false;
+          floorsLayer.visible = false;
+          wallsLayer.visible = false;
+        } else if (categorySelect === buildingLayerCategory[1]) {
+          stFoundationLayer.visible = false;
+          stFramingLayer.visible = true;
+          stColumnLayer.visible = false;
+          columnsLayer.visible = false;
+          floorsLayer.visible = false;
+          wallsLayer.visible = false;
+        } else if (categorySelect === buildingLayerCategory[2]) {
+          stFoundationLayer.visible = false;
+          stFramingLayer.visible = false;
+          stColumnLayer.visible = true;
+          columnsLayer.visible = false;
+          floorsLayer.visible = false;
+          wallsLayer.visible = false;
+        } else if (categorySelect === buildingLayerCategory[3]) {
+          stFoundationLayer.visible = false;
+          stFramingLayer.visible = false;
+          stColumnLayer.visible = false;
+          columnsLayer.visible = true;
+          floorsLayer.visible = false;
+          wallsLayer.visible = false;
+        } else if (categorySelect === buildingLayerCategory[4]) {
+          stFoundationLayer.visible = false;
+          stFramingLayer.visible = false;
+          stColumnLayer.visible = false;
+          columnsLayer.visible = false;
+          floorsLayer.visible = true;
+          wallsLayer.visible = false;
+        } else if (categorySelect === buildingLayerCategory[5]) {
+          stFoundationLayer.visible = false;
+          stFramingLayer.visible = false;
+          stColumnLayer.visible = false;
+          columnsLayer.visible = false;
+          floorsLayer.visible = false;
+          wallsLayer.visible = true;
+        }
 
-        // Define Query
-        var query = new Query();
-        // query.where = '1=1';
-
-        // layerView filter and highlight
-        let highlightSelect: any;
-        view.when(() => {
-          view.whenLayerView(stColumnLayer).then((layerView: any) => {
-            stColumnLayer.queryFeatures(query).then((results: any) => {
-              const lengths = results.features;
-              const rows = lengths.length;
-
-              let objID = [];
-              for (var i = 0; i < rows; i++) {
-                var obj = results.features[i].attributes.OBJECTID;
-                objID.push(obj);
-              }
-
-              if (highlightSelect) {
-                highlightSelect.remove();
-              }
-              highlightSelect = layerView.highlight(objID);
-
-              view.on('click', () => {
-                layerView.filter = new FeatureFilter({
-                  where: undefined,
-                });
-                highlightSelect.remove();
-              });
-            });
-            layerView.filter = new FeatureFilter({
-              where: queryExpression,
-            });
-          });
-
-          view.whenLayerView(stFoundationLayer).then((layerView: any) => {
-            stFoundationLayer.queryFeatures(query).then((results: any) => {
-              const lengths = results.features;
-              const rows = lengths.length;
-
-              let objID = [];
-              for (var i = 0; i < rows; i++) {
-                var obj = results.features[i].attributes.OBJECTID;
-                objID.push(obj);
-              }
-
-              if (highlightSelect) {
-                highlightSelect.remove();
-              }
-              highlightSelect = layerView.highlight(objID);
-
-              view.on('click', () => {
-                layerView.filter = new FeatureFilter({
-                  where: undefined,
-                });
-                highlightSelect.remove();
-              });
-            });
-            layerView.filter = new FeatureFilter({
-              where: queryExpression,
-            });
-          });
-
-          view.whenLayerView(stFramingLayer).then((layerView: any) => {
-            stFramingLayer.queryFeatures(query).then((results: any) => {
-              const lengths = results.features;
-              const rows = lengths.length;
-
-              let objID = [];
-              for (var i = 0; i < rows; i++) {
-                var obj = results.features[i].attributes.OBJECTID;
-                objID.push(obj);
-              }
-
-              if (highlightSelect) {
-                highlightSelect.remove();
-              }
-              highlightSelect = layerView.highlight(objID);
-
-              view.on('click', () => {
-                layerView.filter = new FeatureFilter({
-                  where: undefined,
-                });
-                highlightSelect.remove();
-              });
-            });
-            layerView.filter = new FeatureFilter({
-              where: queryExpression,
-            });
-          });
-
-          view.whenLayerView(columnsLayer).then((layerView: any) => {
-            columnsLayer.queryFeatures(query).then((results: any) => {
-              const lengths = results.features;
-              const rows = lengths.length;
-
-              let objID = [];
-              for (var i = 0; i < rows; i++) {
-                var obj = results.features[i].attributes.OBJECTID;
-                objID.push(obj);
-              }
-
-              if (highlightSelect) {
-                highlightSelect.remove();
-              }
-              highlightSelect = layerView.highlight(objID);
-
-              view.on('click', () => {
-                layerView.filter = new FeatureFilter({
-                  where: undefined,
-                });
-                highlightSelect.remove();
-              });
-            });
-            layerView.filter = new FeatureFilter({
-              where: queryExpression,
-            });
-          });
-
-          view.whenLayerView(floorsLayer).then((layerView: any) => {
-            floorsLayer.queryFeatures(query).then((results: any) => {
-              const lengths = results.features;
-              const rows = lengths.length;
-
-              let objID = [];
-              for (var i = 0; i < rows; i++) {
-                var obj = results.features[i].attributes.OBJECTID;
-                objID.push(obj);
-              }
-
-              if (highlightSelect) {
-                highlightSelect.remove();
-              }
-              highlightSelect = layerView.highlight(objID);
-
-              view.on('click', () => {
-                layerView.filter = new FeatureFilter({
-                  where: undefined,
-                });
-                highlightSelect.remove();
-              });
-            });
-            layerView.filter = new FeatureFilter({
-              where: queryExpression,
-            });
-          });
-
-          view.whenLayerView(wallsLayer).then((layerView: any) => {
-            wallsLayer.queryFeatures(query).then((results: any) => {
-              const lengths = results.features;
-              const rows = lengths.length;
-
-              let objID = [];
-              for (var i = 0; i < rows; i++) {
-                var obj = results.features[i].attributes.OBJECTID;
-                objID.push(obj);
-              }
-
-              if (highlightSelect) {
-                highlightSelect.remove();
-              }
-              highlightSelect = layerView.highlight(objID);
-
-              view.on('click', () => {
-                layerView.filter = new FeatureFilter({
-                  where: undefined,
-                });
-                highlightSelect.remove();
-              });
-            });
-            layerView.filter = new FeatureFilter({
-              where: queryExpression,
-            });
-          });
+        view.on('click', () => {
+          layerVisibleTrue();
         });
       });
       legend.data.push(series);

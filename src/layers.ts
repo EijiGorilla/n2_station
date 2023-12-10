@@ -1,16 +1,7 @@
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-import SceneLayer from '@arcgis/core/layers/SceneLayer';
 import LabelClass from '@arcgis/core/layers/support/LabelClass';
-import UniqueValueRenderer from '@arcgis/core/renderers/UniqueValueRenderer';
 import SimpleRenderer from '@arcgis/core/renderers/SimpleRenderer';
-import {
-  SimpleMarkerSymbol,
-  MeshSymbol3D,
-  FillSymbol3DLayer,
-  LabelSymbol3D,
-  TextSymbol3DLayer,
-} from '@arcgis/core/symbols';
-import SolidEdges3D from '@arcgis/core/symbols/edges/SolidEdges3D';
+import { SimpleMarkerSymbol, LabelSymbol3D, TextSymbol3DLayer } from '@arcgis/core/symbols';
 import { labelSymbol3DLine } from './Label';
 import BuildingSceneLayer from '@arcgis/core/layers/BuildingSceneLayer';
 

@@ -12,7 +12,7 @@ import Query from '@arcgis/core/rest/support/Query';
 import { view } from './Scene';
 import { dropdownData } from './dropdownData';
 
-const buildingLayerCategory = [
+export const buildingLayerCategory = [
   'St.Foundation',
   'St.Framing',
   'St.Column',
@@ -21,7 +21,7 @@ const buildingLayerCategory = [
   'Walls',
 ];
 
-const layerVisibleTrue = () => {
+export const layerVisibleTrue = () => {
   stColumnLayer.visible = true;
   stFoundationLayer.visible = true;
   stFramingLayer.visible = true;

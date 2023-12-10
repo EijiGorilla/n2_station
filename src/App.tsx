@@ -24,7 +24,7 @@ import {
 } from '@esri/calcite-components-react';
 import Chart from './components/Chart';
 import { dropdownData } from './dropdownData';
-import { stColumnLayer, stFoundationLayer, stFramingLayer } from './layers';
+import { stFramingLayer } from './layers';
 
 function App() {
   const mapDiv = useRef(null);
