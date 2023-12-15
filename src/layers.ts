@@ -178,6 +178,37 @@ export let stFramingLayer: null | any;
 export let stColumnLayer: null | any;
 export let stFoundationLayer: null | any;
 
+export const popuTemplate = {
+  title: '{Station}',
+  content: [
+    {
+      type: 'fields',
+      fieldInfos: [
+        {
+          fieldName: 'Category',
+          label: 'Category',
+        },
+        {
+          fieldName: 'Status',
+          label: 'Construction Status',
+        },
+        {
+          fieldName: 'BldgLevel',
+          label: 'Building Level',
+        },
+        {
+          fieldName: 'StructureLevel',
+          label: 'Structure Level',
+        },
+        {
+          fieldName: 'P6ID',
+          label: 'P6 ID',
+        },
+      ],
+    },
+  ],
+};
+
 buildingLayer.when(() => {
   buildingLayer.allSublayers.forEach((layer: any) => {
     switch (layer.modelName) {
@@ -187,28 +218,34 @@ buildingLayer.when(() => {
 
       case 'Columns':
         columnsLayer = layer;
+        columnsLayer.popupTemplate = popuTemplate;
         //excludedLayers.push(layer);
         break;
 
       case 'Floors':
         floorsLayer = layer;
+        floorsLayer.popupTemplate = popuTemplate;
         //excludedLayers
         break;
 
       case 'Walls':
         wallsLayer = layer;
+        wallsLayer.popupTemplate = popuTemplate;
         break;
 
       case 'StructuralFraming':
         stFramingLayer = layer;
+        stFramingLayer.popupTemplate = popuTemplate;
         break;
 
       case 'StructuralColumns':
         stColumnLayer = layer;
+        stColumnLayer.popupTemplate = popuTemplate;
         break;
 
       case 'StructuralFoundation':
         stFoundationLayer = layer;
+        stFoundationLayer.popupTemplate = popuTemplate;
         break;
 
       default:
