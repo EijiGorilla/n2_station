@@ -135,7 +135,7 @@ function App() {
             style={{ marginBottom: 'auto', marginTop: 'auto' }}
           />
           <b className="headerTitle">N2 STATION STRUCTURE</b>
-          <div className="date">As of December 6, 2023</div>
+          <div className="date">As of December 10, 2023</div>
 
           <div className="dropdownFilter">
             <div className="dropdownFilterLayout">
