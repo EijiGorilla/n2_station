@@ -8,6 +8,7 @@ import GroupLayer from '@arcgis/core/layers/GroupLayer';
 import Compass from '@arcgis/core/widgets/Compass';
 import BuildingExplorer from '@arcgis/core/widgets/BuildingExplorer';
 import { buildingLayer, chainageLayer, pierNoLayer, rowLayer, stationLayer } from './layers';
+import TimeSlider from '@arcgis/core/widgets/TimeSlider';
 
 export const map = new Map({
   basemap: 'dark-gray-vector', // "streets-night-vector", basemap
@@ -126,4 +127,31 @@ const searchExpand = new Expand({
 });
 view.ui.add(searchExpand, {
   position: 'top-right',
+});
+
+export const start = new Date(2021, 9, 1);
+export const end = new Date(2027, 1, 1);
+
+interface Props {
+  interval: any;
+  timeExtent: any;
+}
+
+const stops: Props = {
+  interval: {
+    value: 1,
+    unit: 'months',
+  },
+  timeExtent: { start, end },
+};
+
+export const timeSlider = new TimeSlider({
+  container: undefined,
+  mode: 'cumulative-from-start',
+  layout: 'auto',
+  fullTimeExtent: {
+    start: start,
+    end: end,
+  },
+  stops: stops,
 });

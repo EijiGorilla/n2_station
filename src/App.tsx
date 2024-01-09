@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import { useRef, useEffect, useState } from 'react';
-import { map, view, basemaps, layerList } from './Scene';
+import { map, view, basemaps, layerList, timeSlider, start } from './Scene';
 import Select from 'react-select';
 import './index.css';
 import './App.css';
@@ -24,7 +24,15 @@ import {
 } from '@esri/calcite-components-react';
 import Chart from './components/Chart';
 import { dropdownData } from './dropdownData';
-import { stFramingLayer } from './layers';
+import {
+  floorsLayer,
+  stColumnLayer,
+  stFoundationLayer,
+  stFramingLayer,
+  wallsLayer,
+  columnsLayer,
+} from './layers';
+import TimeSlider from './components/TimeSlider';
 
 function App() {
   const mapDiv = useRef(null);
@@ -49,13 +57,37 @@ function App() {
       actionActiveWidget.hidden = true;
     }
 
+    if (activeWidget === 'timeslider') {
+      timeSlider.timeExtent.end = start;
+      view.ui.remove(timeSlider);
+      const queryExpression = 'Station = ' + stationName.value;
+
+      stColumnLayer.definitionExpression = queryExpression;
+      stFoundationLayer.definitionExpression = queryExpression;
+      stFramingLayer.definitionExpression = queryExpression;
+      columnsLayer.definitionExpression = queryExpression;
+      floorsLayer.definitionExpression = queryExpression;
+      wallsLayer.definitionExpression = queryExpression;
+    }
+
     if (nextWidget !== activeWidget) {
       const actionNextWidget = document.querySelector(
         `[data-panel-id=${nextWidget}]`,
       ) as HTMLCalcitePanelElement;
       actionNextWidget.hidden = false;
+
+      // Reset timeslider when closed
+      if (nextWidget === 'timeslider') {
+        view.ui.add(timeSlider, 'bottom-leading');
+      }
     }
   });
+
+  useEffect(() => {
+    if (nextWidget === 'timeslider') {
+      view.ui.remove(timeSlider);
+    }
+  }, [stationName]);
 
   // useEffect(() => {
   //   setStationName(defaultStation);
@@ -197,6 +229,17 @@ function App() {
             ></CalciteAction>
 
             <CalciteAction
+              data-action-id="timeslider"
+              icon="clock"
+              text="Timeslider"
+              id="timeslider"
+              onClick={(event: any) => {
+                setNextWidget(event.target.id);
+                setActiveWidget(nextWidget === activeWidget ? null : nextWidget);
+              }}
+            ></CalciteAction>
+
+            <CalciteAction
               data-action-id="information"
               icon="information"
               text="Information"
@@ -242,6 +285,13 @@ function App() {
               ></CalciteListItem>
             </CalciteList>
           </CalcitePanel>
+
+          <CalcitePanel
+            class="timeslider-panel"
+            height-scale="s"
+            data-panel-id="timeslider"
+            hidden
+          ></CalcitePanel>
 
           <CalcitePanel heading="Description" data-panel-id="information" hidden>
             {nextWidget === 'information' ? (
@@ -289,6 +339,13 @@ function App() {
         </div>
 
         <div className="mapDiv" ref={mapDiv}></div>
+
+        {/* time slider widget */}
+        {nextWidget === 'timeslider' && nextWidget !== activeWidget ? (
+          <TimeSlider station={!stationName ? '' : stationName.name} />
+        ) : (
+          ''
+        )}
       </CalciteShell>
     </>
   );
