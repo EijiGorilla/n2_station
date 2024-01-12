@@ -162,7 +162,7 @@ stationLayer.listMode = 'hide';
 /* Building Scene Layer for station structures */
 export const buildingLayer = new BuildingSceneLayer({
   portalItem: {
-    id: '20e1136eec3149bda9ffa81effa08ebe',
+    id: '9af95ef687a94e8282e0d65fe8b1231e',
   },
   outFields: ['*'],
   title: 'Station Structures',
