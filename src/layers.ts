@@ -5,6 +5,16 @@ import { SimpleMarkerSymbol, LabelSymbol3D, TextSymbol3DLayer } from '@arcgis/co
 import { labelSymbol3DLine } from './Label';
 import BuildingSceneLayer from '@arcgis/core/layers/BuildingSceneLayer';
 
+/* Standalone table for Dates */
+export const dateTable = new FeatureLayer({
+  portalItem: {
+    id: '68fe46f717f94218a9adcbc1dfb908b7',
+    portal: {
+      url: 'https://gis.railway-sector.com/portal',
+    },
+  },
+});
+
 /* Chainage Layer  */
 var labelChainage = new LabelClass({
   labelExpressionInfo: { expression: '$feature.KmSpot' },

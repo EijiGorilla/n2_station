@@ -33,8 +33,11 @@ import {
   columnsLayer,
 } from './layers';
 import TimeSlider from './components/TimeSlider';
+import { dateUpdate } from './Query';
 
 function App() {
+  const [asOfDate, setAsOfDate] = useState<undefined | any | unknown>(null);
+
   const mapDiv = useRef(null);
   const layerListDiv = useRef<HTMLDivElement | undefined | any>(null);
 
@@ -103,6 +106,10 @@ function App() {
   }, [underground]);
 
   useEffect(() => {
+    dateUpdate().then((response: any) => {
+      setAsOfDate(response);
+    });
+
     if (mapDiv.current) {
       map.ground.navigationConstraint = {
         type: 'none',
