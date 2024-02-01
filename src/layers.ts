@@ -195,6 +195,10 @@ export const popuTemplate = {
       type: 'fields',
       fieldInfos: [
         {
+          fieldName: 'target_date',
+          label: 'Target Date',
+        },
+        {
           fieldName: 'Category',
           label: 'Category',
         },
