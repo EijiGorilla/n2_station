@@ -8,13 +8,12 @@ import BuildingSceneLayer from '@arcgis/core/layers/BuildingSceneLayer';
 /* Standalone table for Dates */
 export const dateTable = new FeatureLayer({
   portalItem: {
-    id: '68fe46f717f94218a9adcbc1dfb908b7',
+    id: 'b2a118b088a44fa0a7a84acbe0844cb2',
     portal: {
       url: 'https://gis.railway-sector.com/portal',
     },
   },
 });
-
 /* Chainage Layer  */
 var labelChainage = new LabelClass({
   labelExpressionInfo: { expression: '$feature.KmSpot' },
@@ -43,7 +42,7 @@ var chainageRenderer = new SimpleRenderer({
 
 export const chainageLayer = new FeatureLayer({
   portalItem: {
-    id: 'e47e9f4d475e4e24acad458a1428f3f9',
+    id: '876de8483da9485aac5df737cbef2143',
     portal: {
       url: 'https://gis.railway-sector.com/portal',
     },
@@ -101,13 +100,7 @@ var pierNoLabelClass = new LabelClass({
 });
 
 export const pierNoLayer = new FeatureLayer({
-  portalItem: {
-    id: 'e47e9f4d475e4e24acad458a1428f3f9',
-    portal: {
-      url: 'https://gis.railway-sector.com/portal',
-    },
-  },
-  layerId: 6,
+  url: 'https://gis.railway-sector.com/server/rest/services/N2_Alignment/FeatureServer/6',
   labelingInfo: [pierNoLabelClass],
   elevationInfo: {
     mode: 'on-the-ground', //absolute-height, relative-to-ground
@@ -119,12 +112,7 @@ export const pierNoLayer = new FeatureLayer({
 
 // * PROW *//
 export const rowLayer = new FeatureLayer({
-  portalItem: {
-    id: 'e47e9f4d475e4e24acad458a1428f3f9',
-    portal: {
-      url: 'https://gis.railway-sector.com/portal',
-    },
-  },
+  url: 'https://gis.railway-sector.com/server/rest/services/N2_Alignment/FeatureServer/1',
   layerId: 1,
   title: 'ROW',
   definitionExpression: "Extension = 'N2'",
@@ -155,7 +143,7 @@ var labelClass = new LabelClass({
 
 export const stationLayer = new FeatureLayer({
   portalItem: {
-    id: 'e47e9f4d475e4e24acad458a1428f3f9',
+    id: '876de8483da9485aac5df737cbef2143',
     portal: {
       url: 'https://gis.railway-sector.com/portal',
     },
@@ -172,7 +160,10 @@ stationLayer.listMode = 'hide';
 /* Building Scene Layer for station structures */
 export const buildingLayer = new BuildingSceneLayer({
   portalItem: {
-    id: '9af95ef687a94e8282e0d65fe8b1231e',
+    id: 'a1f0981f5fac47c5b1d1e8ca80abc118',
+    portal: {
+      url: 'https://gis.railway-sector.com/portal',
+    },
   },
   outFields: ['*'],
   title: 'Station Structures',
