@@ -1,7 +1,12 @@
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import LabelClass from '@arcgis/core/layers/support/LabelClass';
 import SimpleRenderer from '@arcgis/core/renderers/SimpleRenderer';
-import { SimpleMarkerSymbol, LabelSymbol3D, TextSymbol3DLayer } from '@arcgis/core/symbols';
+import {
+  SimpleMarkerSymbol,
+  LabelSymbol3D,
+  TextSymbol3DLayer,
+  SimpleLineSymbol,
+} from '@arcgis/core/symbols';
 import { labelSymbol3DLine } from './Label';
 import BuildingSceneLayer from '@arcgis/core/layers/BuildingSceneLayer';
 
@@ -111,12 +116,19 @@ export const pierNoLayer = new FeatureLayer({
 });
 
 // * PROW *//
+var prowRenderer = new SimpleRenderer({
+  symbol: new SimpleLineSymbol({
+    color: '#ff0000',
+    width: '2px',
+  }),
+});
+
 export const rowLayer = new FeatureLayer({
   url: 'https://gis.railway-sector.com/server/rest/services/N2_Alignment/FeatureServer/1',
-  layerId: 1,
   title: 'ROW',
   definitionExpression: "Extension = 'N2'",
   popupEnabled: false,
+  renderer: prowRenderer,
 });
 
 // * Station Layer * //
