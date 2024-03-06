@@ -61,7 +61,6 @@ export const chainageLayer = new FeatureLayer({
   minScale: 150000,
   maxScale: 0,
   renderer: chainageRenderer,
-  outFields: ['*'],
   popupEnabled: false,
 });
 
@@ -111,7 +110,6 @@ export const pierNoLayer = new FeatureLayer({
     mode: 'on-the-ground', //absolute-height, relative-to-ground
   },
   title: 'Pier No',
-  outFields: ['*'],
   popupEnabled: false,
 });
 
@@ -177,7 +175,7 @@ export const buildingLayer = new BuildingSceneLayer({
       url: 'https://gis.railway-sector.com/portal',
     },
   },
-  outFields: ['*'],
+  // outFields: ['*'],
   title: 'Station Structures',
 });
 
