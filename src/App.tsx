@@ -138,9 +138,9 @@ function App() {
       ...defaultStyles,
       backgroundColor: '#2b2b2b',
       borderColor: '#949494',
-      height: 35,
-      width: '170px',
       color: '#ffffff',
+      width: '10rem',
+      touchUi: false,
     }),
     singleValue: (defaultStyles: any) => ({ ...defaultStyles, color: '#fff' }),
   };
@@ -148,7 +148,7 @@ function App() {
   return (
     <>
       <CalciteShell>
-        <CalciteTabs slot="panel-end" style={{ width: '25vw' }}>
+        <CalciteTabs slot="panel-end" layout="center" scale="m">
           {!stFramingLayer ? (
             <div
               style={{ color: 'orange', fontSize: '20px', paddingTop: '20px', paddingLeft: '10px' }}
@@ -164,42 +164,49 @@ function App() {
         <header
           slot="header"
           id="header-title"
-          style={{ display: 'flex', width: '100%', padding: '0 1rem' }}
+          style={{
+            display: 'flex',
+            width: '100%',
+            height: '70px',
+            padding: '0 1rem',
+            borderStyle: 'solid',
+            borderWidth: 1,
+          }}
         >
           <img
             src="https://EijiGorilla.github.io/Symbols/Projec_Logo/DOTr_Logo_v2.png"
             alt="DOTr Logo"
-            height={'2.9%'}
-            width={'2.9%'}
+            height={'55px'}
+            width={'55px'}
             style={{ marginBottom: 'auto', marginTop: 'auto' }}
           />
           <b className="headerTitle">N2 STATION STRUCTURE</b>
-          <div className="date">As of January 12, 2024</div>
+          <div className="date">{!asOfDate ? '' : 'As of ' + asOfDate}</div>
 
-          <div className="dropdownFilter">
-            <div className="dropdownFilterLayout">
-              <b style={{ color: 'white', margin: 10, fontSize: '0.9vw' }}></b>
-              <Select
-                placeholder="Select Station"
-                value={stationName}
-                options={dropdownData}
-                onChange={handleMunicipalityChange}
-                getOptionLabel={(x: any) => x.name}
-                styles={customstyles}
-              />
-            </div>
+          <div className="dropdownFilterLayout">
+            <b style={{ color: 'white', fontSize: '1rem', margin: 'auto', paddingRight: '3%' }}>
+              Station
+            </b>
+            <Select
+              placeholder="Select Station"
+              value={stationName}
+              options={dropdownData}
+              onChange={handleMunicipalityChange}
+              getOptionLabel={(x: any) => x.name}
+              styles={customstyles}
+            />
           </div>
 
           <img
             src="https://EijiGorilla.github.io/Symbols/Projec_Logo/GCR LOGO.png"
             alt="GCR Logo"
-            height={'4.4%'}
-            width={'4.4%'}
+            height={'55px'}
+            width={'55px'}
             style={{
               marginBottom: 'auto',
               marginTop: 'auto',
               marginLeft: 'auto',
-              marginRight: '5rem',
+              marginRight: '3%',
             }}
           />
         </header>
