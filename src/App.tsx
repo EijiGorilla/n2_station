@@ -31,6 +31,7 @@ import {
   stFramingLayer,
   wallsLayer,
   columnsLayer,
+  buildingLayer,
 } from './layers';
 import TimeSlider from './components/TimeSlider';
 import { dateUpdate } from './Query';
@@ -48,6 +49,8 @@ function App() {
 
   // Calcite switch for see-through-ground
   const [underground, setUnderground] = useState<boolean>(false);
+
+  const [buildingLayerLoaded, setBuildingLayerLoaded] = useState<any>();
 
   // For dropdown filter
   const [stationName, setStationName] = useState<null | any>(null);
@@ -92,9 +95,11 @@ function App() {
     }
   }, [stationName]);
 
-  // useEffect(() => {
-  //   setStationName(defaultStation);
-  // }, []);
+  useEffect(() => {
+    buildingLayer.load().then(() => {
+      setBuildingLayerLoaded(buildingLayer.loadStatus);
+    });
+  });
 
   const handleMunicipalityChange = (obj: any) => {
     setStationName(obj);
@@ -149,16 +154,10 @@ function App() {
     <>
       <CalciteShell>
         <CalciteTabs slot="panel-end" layout="center" scale="m">
-          {!stFramingLayer ? (
-            <div
-              style={{ color: 'orange', fontSize: '20px', paddingTop: '20px', paddingLeft: '10px' }}
-            >
-              Note:
-              <br />
-              <b style={{ color: 'white' }}>Select station from the dropdown list!</b>
-            </div>
-          ) : (
+          {buildingLayerLoaded === 'loaded' ? (
             <Chart station={!stationName ? '' : stationName.name} />
+          ) : (
+            <div></div>
           )}
         </CalciteTabs>
         <header
