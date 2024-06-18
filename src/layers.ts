@@ -1,14 +1,18 @@
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import LabelClass from '@arcgis/core/layers/support/LabelClass';
 import SimpleRenderer from '@arcgis/core/renderers/SimpleRenderer';
+import UniqueValueRenderer from '@arcgis/core/renderers/UniqueValueRenderer';
 import {
   SimpleMarkerSymbol,
   LabelSymbol3D,
   TextSymbol3DLayer,
   SimpleLineSymbol,
+  MeshSymbol3D,
+  FillSymbol3DLayer,
 } from '@arcgis/core/symbols';
 import { labelSymbol3DLine } from './Label';
 import BuildingSceneLayer from '@arcgis/core/layers/BuildingSceneLayer';
+import SolidEdges3D from '@arcgis/core/symbols/edges/SolidEdges3D';
 
 /* Standalone table for Dates */
 export const dateTable = new FeatureLayer({
@@ -175,7 +179,7 @@ export const buildingLayer = new BuildingSceneLayer({
       url: 'https://gis.railway-sector.com/portal',
     },
   },
-  // outFields: ['*'],
+  outFields: ['Category', 'Status', 'BldgLevel', 'StructureLevel'],
   title: 'Station Structures',
 });
 
@@ -195,10 +199,10 @@ export const popuTemplate = {
     {
       type: 'fields',
       fieldInfos: [
-        {
-          fieldName: 'target_date',
-          label: 'Target Date',
-        },
+        // {
+        //   fieldName: 'target_date',
+        //   label: 'Target Date',
+        // },
         {
           fieldName: 'Category',
           label: 'Category',
@@ -215,14 +219,44 @@ export const popuTemplate = {
           fieldName: 'StructureLevel',
           label: 'Structure Level',
         },
-        {
-          fieldName: 'P6ID',
-          label: 'P6 ID',
-        },
+        // {
+        //   fieldName: 'P6ID',
+        //   label: 'P6 ID',
+        // },
       ],
     },
   ],
 };
+
+const colorStatus = [
+  [225, 225, 225, 0.1], // To be Constructed (white)
+  [130, 130, 130, 0.5], // Under Construction
+  [255, 0, 0, 0.8], // Delayed
+  [0, 112, 255, 0.8], // Completed
+];
+
+const renderer = new UniqueValueRenderer({
+  field: 'Status',
+});
+
+for (var i = 0; i < colorStatus.length; i++) {
+  renderer.addUniqueValueInfo({
+    value: i + 1,
+    symbol: new MeshSymbol3D({
+      symbolLayers: [
+        new FillSymbol3DLayer({
+          material: {
+            color: colorStatus[i],
+            colorMixMode: 'replace',
+          },
+          edges: new SolidEdges3D({
+            color: [225, 225, 225, 0.3],
+          }),
+        }),
+      ],
+    }),
+  });
+}
 
 buildingLayer.when(() => {
   buildingLayer.allSublayers.forEach((layer: any) => {
@@ -234,33 +268,39 @@ buildingLayer.when(() => {
       case 'Columns':
         columnsLayer = layer;
         columnsLayer.popupTemplate = popuTemplate;
+        columnsLayer.renderer = renderer;
         //excludedLayers.push(layer);
         break;
 
       case 'Floors':
         floorsLayer = layer;
         floorsLayer.popupTemplate = popuTemplate;
+        floorsLayer.renderer = renderer;
         //excludedLayers
         break;
 
       case 'Walls':
         wallsLayer = layer;
         wallsLayer.popupTemplate = popuTemplate;
+        wallsLayer.renderer = renderer;
         break;
 
       case 'StructuralFraming':
         stFramingLayer = layer;
         stFramingLayer.popupTemplate = popuTemplate;
+        stFramingLayer.renderer = renderer;
         break;
 
       case 'StructuralColumns':
         stColumnLayer = layer;
         stColumnLayer.popupTemplate = popuTemplate;
+        stColumnLayer.renderer = renderer;
         break;
 
       case 'StructuralFoundation':
         stFoundationLayer = layer;
         stFoundationLayer.popupTemplate = popuTemplate;
+        stFoundationLayer.renderer = renderer;
         break;
 
       default:

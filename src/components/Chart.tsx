@@ -197,25 +197,30 @@ const Chart = (props: any) => {
           valueXField: fieldName,
           valueXShow: 'valueXTotalPercent',
           categoryYField: 'category',
+          // fill:
+          //   fieldName === 'delay'
+          //     ? fieldName === 'incomp'
+          //       ? am5.color(chartSeriesFillColorIncomp)
+          //       : am5.color(chartSeriesFillColorDelay)
+          //     : am5.color(chartSeriesFillColorComp),
           fill:
-            fieldName === 'delay'
-              ? fieldName === 'incomp'
-                ? am5.color(chartSeriesFillColorIncomp)
-                : am5.color(chartSeriesFillColorDelay)
+            fieldName === 'incomp'
+              ? am5.color(chartSeriesFillColorIncomp)
               : am5.color(chartSeriesFillColorComp),
           stroke: am5.color(chartBorderLineColor),
         }),
       );
 
       series.columns.template.setAll({
-        fillOpacity:
-          fieldName === 'comp' // first condition
-            ? fieldName === 'incomp' // second condition
-              ? 0 // if first condition is false and second condition is true,
-              : 1 // if first condition is true
-            : fieldName === 'delay' // third condition
-              ? 0.5 // if first and second conditions are false but third condition is true
-              : 0, // else
+        // fillOpacity:
+        //   fieldName === 'comp' // first condition
+        //     ? fieldName === 'incomp' // second condition
+        //       ? 0 // if first condition is false and second condition is true,
+        //       : 1 // if first condition is true
+        //     : fieldName === 'delay' // third condition
+        //       ? 0.5 // if first and second conditions are false but third condition is true
+        //       : 0, // else
+        fillOpacity: fieldName === 'comp' ? 1 : 0,
         tooltipText: '{name}: {valueX}', // "{categoryY}: {valueX}",
         tooltipY: am5.percent(90),
         strokeWidth: chartBorderLineWidth,
@@ -227,10 +232,11 @@ const Chart = (props: any) => {
       series.bullets.push(function () {
         return am5.Bullet.new(root, {
           sprite: am5.Label.new(root, {
-            text:
-              fieldName === 'incomp' || fieldName === 'delay'
-                ? ''
-                : "{valueXTotalPercent.formatNumber('#.')}%", //"{valueX}",
+            // text:
+            //   fieldName === 'incomp' || fieldName === 'delay'
+            //     ? ''
+            //     : "{valueXTotalPercent.formatNumber('#.')}%", //"{valueX}",
+            text: fieldName === 'comp' ? "{valueXTotalPercent.formatNumber('#.')}%" : '',
             fill: root.interfaceColors.get('alternativeText'),
             opacity: fieldName === 'incomp' ? 0 : 1,
             fontSize: seriesBulletLabelFontSize,
@@ -303,7 +309,7 @@ const Chart = (props: any) => {
     }
     makeSeries('Complete', 'comp');
     makeSeries('Incomplete', 'incomp');
-    makeSeries('Delayed', 'delay');
+    // makeSeries('Delayed', 'delay');
     chart.appear(1000, 100);
 
     return () => {
