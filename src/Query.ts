@@ -97,7 +97,8 @@ export async function generateChartData(stationname: any) {
   });
 
   var query = new Query();
-  query.outStatistics = [total_incomp, total_comp, total_delay];
+  // query.outStatistics = [total_incomp, total_comp, total_delay];
+  query.outStatistics = [total_incomp, total_comp];
 
   const queryExpression = 'Station = ' + stationValue;
   const queryAll = '1=1';
@@ -126,54 +127,54 @@ export async function generateChartData(stationname: any) {
     var stats = response.features[0].attributes;
     const total_incomp = stats.total_incomp;
     const total_comp = stats.total_comp;
-    const total_delay = stats.total_delay;
+    // const total_delay = stats.total_delay;
 
-    return [total_incomp, total_comp, total_delay];
+    return [total_incomp, total_comp];
   });
 
   const stFoundationCompile = stFoundationLayer.queryFeatures(query).then((response: any) => {
     var stats = response.features[0].attributes;
     const total_incomp = stats.total_incomp;
     const total_comp = stats.total_comp;
-    const total_delay = stats.total_delay;
+    // const total_delay = stats.total_delay;
 
-    return [total_incomp, total_comp, total_delay];
+    return [total_incomp, total_comp];
   });
 
   const stFramingCompile = stFramingLayer.queryFeatures(query).then((response: any) => {
     var stats = response.features[0].attributes;
     const total_incomp = stats.total_incomp;
     const total_comp = stats.total_comp;
-    const total_delay = stats.total_delay;
+    // const total_delay = stats.total_delay;
 
-    return [total_incomp, total_comp, total_delay];
+    return [total_incomp, total_comp];
   });
 
   const columnsCompile = columnsLayer.queryFeatures(query).then((response: any) => {
     var stats = response.features[0].attributes;
     const total_incomp = stats.total_incomp;
     const total_comp = stats.total_comp;
-    const total_delay = stats.total_delay;
+    // const total_delay = stats.total_delay;
 
-    return [total_incomp, total_comp, total_delay];
+    return [total_incomp, total_comp];
   });
 
   const floorsCompile = floorsLayer.queryFeatures(query).then((response: any) => {
     var stats = response.features[0].attributes;
     const total_incomp = stats.total_incomp;
     const total_comp = stats.total_comp;
-    const total_delay = stats.total_delay;
+    // const total_delay = stats.total_delay;
 
-    return [total_incomp, total_comp, total_delay];
+    return [total_incomp, total_comp];
   });
 
   const wallsCompile = wallsLayer.queryFeatures(query).then((response: any) => {
     var stats = response.features[0].attributes;
     const total_incomp = stats.total_incomp;
     const total_comp = stats.total_comp;
-    const total_delay = stats.total_delay;
+    // const total_delay = stats.total_delay;
 
-    return [total_incomp, total_comp, total_delay];
+    return [total_incomp, total_comp];
   });
 
   const stcolumn = await stColumnCompile;
@@ -188,37 +189,37 @@ export async function generateChartData(stationname: any) {
       category: buildingLayerCategory[0],
       comp: stfoundation[1],
       incomp: stfoundation[0],
-      delay: stfoundation[2],
+      // delay: stfoundation[2],
     },
     {
       category: buildingLayerCategory[1],
       comp: stframing[1],
       incomp: stframing[0],
-      delay: stframing[2],
+      // delay: stframing[2],
     },
     {
       category: buildingLayerCategory[2],
       comp: stcolumn[1],
       incomp: stcolumn[0],
-      delay: stcolumn[2],
+      // delay: stcolumn[2],
     },
     {
       category: buildingLayerCategory[3],
       comp: columns[1],
       incomp: columns[0],
-      delay: columns[2],
+      // delay: columns[2],
     },
     {
       category: buildingLayerCategory[4],
       comp: floors[1],
       incomp: floors[0],
-      delay: floors[2],
+      // delay: floors[2],
     },
     {
       category: buildingLayerCategory[5],
       comp: walls[1],
       incomp: walls[0],
-      delay: walls[2],
+      // delay: walls[2],
     },
   ];
 
