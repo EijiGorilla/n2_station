@@ -7,6 +7,7 @@ import {
   columnsLayer,
   floorsLayer,
   wallsLayer,
+  exteriorShellLayer,
 } from '../layers';
 
 import * as am5 from '@amcharts/amcharts5';
@@ -80,6 +81,7 @@ const Chart = (props: any) => {
   const chartBorderLineWidth = 0.4;
 
   useEffect(() => {
+    exteriorShellLayer.visible = false;
     maybeDisposeRoot(chartID);
 
     var root = am5.Root.new(chartID);

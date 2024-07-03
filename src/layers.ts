@@ -193,6 +193,8 @@ export let stFramingLayer: null | any;
 export let stColumnLayer: null | any;
 export let stFoundationLayer: null | any;
 
+export let exteriorShellLayer: null | any;
+
 export const popuTemplate = {
   title: '{Station}',
   content: [
@@ -263,6 +265,10 @@ buildingLayer.when(() => {
     switch (layer.modelName) {
       case 'FullModel':
         layer.visible = true;
+        break;
+
+      case 'Overview':
+        exteriorShellLayer = layer;
         break;
 
       case 'Columns':
