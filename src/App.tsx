@@ -34,7 +34,7 @@ import {
   buildingLayer,
 } from './layers';
 import TimeSlider from './components/TimeSlider';
-import { dateUpdate } from './Query';
+import { dateUpdate, zoomToLayer } from './Query';
 
 function App() {
   const [asOfDate, setAsOfDate] = useState<undefined | any | unknown>(null);
@@ -103,6 +103,7 @@ function App() {
 
   const handleMunicipalityChange = (obj: any) => {
     setStationName(obj);
+    zoomToLayer(stFramingLayer);
   };
 
   useEffect(() => {
@@ -199,8 +200,8 @@ function App() {
           <img
             src="https://EijiGorilla.github.io/Symbols/Projec_Logo/GCR LOGO.png"
             alt="GCR Logo"
-            height={'55px'}
-            width={'55px'}
+            height={'50px'}
+            width={'70px'}
             style={{
               marginBottom: 'auto',
               marginTop: 'auto',

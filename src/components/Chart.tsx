@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { view } from '../Scene';
+import { map, view } from '../Scene';
 import {
   stColumnLayer,
   stFoundationLayer,
@@ -8,7 +8,10 @@ import {
   floorsLayer,
   wallsLayer,
   exteriorShellLayer,
+  buildingLayer,
 } from '../layers';
+import Query from '@arcgis/core/rest/support/Query';
+import FeatureFilter from '@arcgis/core/layers/support/FeatureFilter';
 
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
@@ -24,6 +27,7 @@ import {
   zoomToLayer,
 } from '../Query';
 import { CalciteLabel } from '@esri/calcite-components-react';
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 
 // Dispose function
 function maybeDisposeRoot(divId: any) {
@@ -45,14 +49,76 @@ const Chart = (props: any) => {
   useEffect(() => {
     generateChartData(props.station).then((response: any) => {
       setChartData(response);
+      // zoomToLayer(stFramingLayer);
     });
 
     generateTotalProgress(props.station).then((response: any) => {
       setProgress(response);
     });
-
-    zoomToLayer(stFramingLayer);
   }, [props.station]);
+
+  // type
+  const types = [
+    {
+      category: buildingLayerCategory[0],
+      value: 1,
+    },
+    {
+      category: buildingLayerCategory[2],
+      value: 2,
+    },
+    {
+      category: buildingLayerCategory[1],
+      value: 3,
+    },
+    {
+      category: 'Roofs',
+      value: 4,
+    },
+    {
+      category: buildingLayerCategory[4],
+      value: 5,
+    },
+    {
+      category: buildingLayerCategory[5],
+      value: 6,
+    },
+    {
+      category: buildingLayerCategory[3],
+      value: 7,
+    },
+    {
+      category: 'Others',
+      value: 8,
+    },
+  ];
+
+  const sublayerNames = [
+    {
+      modelName: 'StructuralFoundation',
+      category: buildingLayerCategory[0],
+    },
+    {
+      modelName: 'StructuralFraming',
+      category: buildingLayerCategory[1],
+    },
+    {
+      modelName: 'StructuralColumns',
+      category: buildingLayerCategory[2],
+    },
+    {
+      modelName: 'Columns',
+      category: buildingLayerCategory[3],
+    },
+    {
+      modelName: 'Floors',
+      category: buildingLayerCategory[4],
+    },
+    {
+      modelName: 'Walls',
+      category: buildingLayerCategory[5],
+    },
+  ];
 
   // Define parameters
   const marginTop = 0;
@@ -252,59 +318,90 @@ const Chart = (props: any) => {
       // Click event
       // const find = dropdownData.find((emp: any) => emp.name === props.station);
       // const stationValue = find?.value;
-
       series.columns.template.events.on('click', (ev) => {
         const selected: any = ev.target.dataItem?.dataContext;
         const categorySelect: string = selected.category;
-        // const selectedStatus: number | null =
-        //   fieldName === 'comp' ? (fieldName === 'incomp' ? 1 : 4) : fieldName === 'delay' ? 3 : 1;
+        const find = types.find((emp: any) => emp.category === categorySelect);
+        const typeSelect = find?.value;
+        const statusSelect: number | null = fieldName === 'comp' ? 4 : 1;
 
-        if (categorySelect === buildingLayerCategory[0]) {
-          stFoundationLayer.visible = true;
-          stFramingLayer.visible = false;
-          stColumnLayer.visible = false;
-          columnsLayer.visible = false;
-          floorsLayer.visible = false;
-          wallsLayer.visible = false;
-        } else if (categorySelect === buildingLayerCategory[1]) {
-          stFoundationLayer.visible = false;
-          stFramingLayer.visible = true;
-          stColumnLayer.visible = false;
-          columnsLayer.visible = false;
-          floorsLayer.visible = false;
-          wallsLayer.visible = false;
-        } else if (categorySelect === buildingLayerCategory[2]) {
-          stFoundationLayer.visible = false;
-          stFramingLayer.visible = false;
-          stColumnLayer.visible = true;
-          columnsLayer.visible = false;
-          floorsLayer.visible = false;
-          wallsLayer.visible = false;
-        } else if (categorySelect === buildingLayerCategory[3]) {
-          stFoundationLayer.visible = false;
-          stFramingLayer.visible = false;
-          stColumnLayer.visible = false;
-          columnsLayer.visible = true;
-          floorsLayer.visible = false;
-          wallsLayer.visible = false;
-        } else if (categorySelect === buildingLayerCategory[4]) {
-          stFoundationLayer.visible = false;
-          stFramingLayer.visible = false;
-          stColumnLayer.visible = false;
-          columnsLayer.visible = false;
-          floorsLayer.visible = true;
-          wallsLayer.visible = false;
-        } else if (categorySelect === buildingLayerCategory[5]) {
-          stFoundationLayer.visible = false;
-          stFramingLayer.visible = false;
-          stColumnLayer.visible = false;
-          columnsLayer.visible = false;
-          floorsLayer.visible = false;
-          wallsLayer.visible = true;
-        }
+        // find sublayer
+        const selectedSublayerName = sublayerNames.find(
+          (emp: any) => emp.category === categorySelect,
+        )?.modelName;
 
-        view.on('click', () => {
+        const expression = 'Types = ' + typeSelect + ' AND ' + 'Status = ' + statusSelect;
+
+        const sublayersInvisible = () => {
+          if (categorySelect === buildingLayerCategory[0]) {
+            stFramingLayer.visible = false;
+            stColumnLayer.visible = false;
+            columnsLayer.visible = false;
+            floorsLayer.visible = false;
+            wallsLayer.visible = false;
+          } else if (categorySelect === buildingLayerCategory[1]) {
+            stFoundationLayer.visible = false;
+            stColumnLayer.visible = false;
+            columnsLayer.visible = false;
+            floorsLayer.visible = false;
+            wallsLayer.visible = false;
+          } else if (categorySelect === buildingLayerCategory[2]) {
+            stFoundationLayer.visible = false;
+            stFramingLayer.visible = false;
+            columnsLayer.visible = false;
+            floorsLayer.visible = false;
+            wallsLayer.visible = false;
+          } else if (categorySelect === buildingLayerCategory[3]) {
+            stFoundationLayer.visible = false;
+            stFramingLayer.visible = false;
+            stColumnLayer.visible = false;
+            floorsLayer.visible = false;
+            wallsLayer.visible = false;
+          } else if (categorySelect === buildingLayerCategory[4]) {
+            stFoundationLayer.visible = false;
+            stFramingLayer.visible = false;
+            stColumnLayer.visible = false;
+            columnsLayer.visible = false;
+            wallsLayer.visible = false;
+          } else if (categorySelect === buildingLayerCategory[5]) {
+            stFoundationLayer.visible = false;
+            stFramingLayer.visible = false;
+            stColumnLayer.visible = false;
+            columnsLayer.visible = false;
+            floorsLayer.visible = false;
+          }
+        };
+
+        // Define query
+        view.whenLayerView(buildingLayer).then((buildingSceneLayerView: any) => {
           layerVisibleTrue();
+          const sublayerView = buildingSceneLayerView.sublayerViews.find((sublayerView: any) => {
+            return sublayerView.sublayer.modelName === selectedSublayerName;
+          });
+          sublayersInvisible();
+
+          const query = sublayerView.createQuery();
+          query.where = expression;
+          sublayerView.queryFeatures(query).then((results: any) => {
+            // sublayerView.highlight(results.features);
+            const lengths = results.features;
+            const rows = lengths.length;
+            let objID = [];
+            for (var i = 0; i < rows; i++) {
+              var obj = results.features[i].attributes.OBJECTID;
+              objID.push(obj);
+            }
+
+            view.on('click', () => {
+              sublayerView.filter = new FeatureFilter({
+                where: undefined,
+              });
+              layerVisibleTrue();
+            });
+            sublayerView.filter = new FeatureFilter({
+              where: expression,
+            });
+          });
         });
       });
       legend.data.push(series);
@@ -328,8 +425,8 @@ const Chart = (props: any) => {
           <img
             src="https://EijiGorilla.github.io/Symbols/Station_Structures_icon.png"
             alt="Utility Logo"
-            height={'21%'}
-            width={'21%'}
+            height={'29%'}
+            width={'29%'}
             style={{ marginLeft: '90%', display: 'flex', marginTop: '-17%' }}
           />
           <div className="totalProgressNumber2">({thousands_separators(progress[0])})</div>

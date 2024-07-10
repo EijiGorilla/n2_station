@@ -179,7 +179,7 @@ export const buildingLayer = new BuildingSceneLayer({
       url: 'https://gis.railway-sector.com/portal',
     },
   },
-  outFields: ['Category', 'Status', 'BldgLevel', 'StructureLevel'],
+  outFields: ['Category', 'Status', 'BldgLevel', 'StructureLevel', 'Types'],
   title: 'Station Structures',
 });
 

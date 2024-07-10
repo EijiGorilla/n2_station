@@ -62,6 +62,7 @@ export const layerVisibleTrue = () => {
   stFramingLayer.visible = true;
   floorsLayer.visible = true;
   wallsLayer.visible = true;
+  columnsLayer.visible = true;
   buildingLayer.visible = true;
 };
 
