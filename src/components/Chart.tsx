@@ -26,8 +26,10 @@ import {
   thousands_separators,
   zoomToLayer,
 } from '../Query';
-import { CalciteLabel } from '@esri/calcite-components-react';
+import '@esri/calcite-components/dist/components/calcite-button';
+import { CalciteLabel, CalciteButton } from '@esri/calcite-components-react';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import SubLayerView from '@arcgis/core/views/layers/BuildingComponentSublayerView';
 
 // Dispose function
 function maybeDisposeRoot(divId: any) {
@@ -44,6 +46,8 @@ const Chart = (props: any) => {
   const chartRef = useRef<unknown | any | undefined>({});
   const [chartData, setChartData] = useState([]);
   const [progress, setProgress] = useState([]);
+  const [sublayerViewFilter, setSublayerViewFilter] = useState<SubLayerView | any>();
+  const [resetButtonClicked, setResetButtonClicked] = useState<boolean>(false);
 
   const chartID = 'station-bar';
   useEffect(() => {
@@ -378,30 +382,27 @@ const Chart = (props: any) => {
           const sublayerView = buildingSceneLayerView.sublayerViews.find((sublayerView: any) => {
             return sublayerView.sublayer.modelName === selectedSublayerName;
           });
+          setSublayerViewFilter(sublayerView);
           sublayersInvisible();
 
           const query = sublayerView.createQuery();
-          query.where = expression;
-          sublayerView.queryFeatures(query).then((results: any) => {
-            // sublayerView.highlight(results.features);
-            const lengths = results.features;
-            const rows = lengths.length;
-            let objID = [];
-            for (var i = 0; i < rows; i++) {
-              var obj = results.features[i].attributes.OBJECTID;
-              objID.push(obj);
-            }
+          !sublayerViewFilter ? (query.where = 'Status >= 1') : (query.where = expression);
+          // query.where = expression;
+          sublayerViewFilter &&
+            sublayerView.queryFeatures(query).then((results: any) => {
+              // sublayerView.highlight(results.features);
+              const lengths = results.features;
+              const rows = lengths.length;
+              let objID = [];
+              for (var i = 0; i < rows; i++) {
+                var obj = results.features[i].attributes.OBJECTID;
+                objID.push(obj);
+              }
 
-            view.on('click', () => {
               sublayerView.filter = new FeatureFilter({
-                where: undefined,
+                where: expression,
               });
-              layerVisibleTrue();
             });
-            sublayerView.filter = new FeatureFilter({
-              where: expression,
-            });
-          });
         });
       });
       legend.data.push(series);
@@ -415,6 +416,15 @@ const Chart = (props: any) => {
       root.dispose();
     };
   });
+
+  useEffect(() => {
+    if (resetButtonClicked) {
+      sublayerViewFilter.filter = new FeatureFilter({
+        where: undefined,
+      });
+      layerVisibleTrue();
+    }
+  }, [resetButtonClicked]);
 
   return (
     <div>
@@ -444,6 +454,20 @@ const Chart = (props: any) => {
           marginTop: '5%',
         }}
       ></div>
+      <div
+        style={{
+          width: '50%',
+          marginLeft: '30%',
+          paddingTop: '10%',
+        }}
+      >
+        <CalciteButton
+          iconEnd="reset"
+          onClick={() => setResetButtonClicked(resetButtonClicked === false ? true : false)}
+        >
+          Reset Chart Filter
+        </CalciteButton>
+      </div>
     </div>
   );
 };
