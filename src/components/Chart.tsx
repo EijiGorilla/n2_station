@@ -48,8 +48,8 @@ const Chart = (props: any) => {
   const [progress, setProgress] = useState([]);
   const [sublayerViewFilter, setSublayerViewFilter] = useState<SubLayerView | any>();
   const [resetButtonClicked, setResetButtonClicked] = useState<boolean>(false);
-
   const chartID = 'station-bar';
+
   useEffect(() => {
     generateChartData(props.station).then((response: any) => {
       setChartData(response);
@@ -59,6 +59,12 @@ const Chart = (props: any) => {
     generateTotalProgress(props.station).then((response: any) => {
       setProgress(response);
     });
+
+    const resetChartFilterButton = document.querySelector(`[id=filterButton]`) as HTMLDivElement;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    !props.station
+      ? (resetChartFilterButton.hidden = true)
+      : (resetChartFilterButton.hidden = false);
   }, [props.station]);
 
   // type
@@ -455,6 +461,7 @@ const Chart = (props: any) => {
         }}
       ></div>
       <div
+        id="filterButton"
         style={{
           width: '50%',
           marginLeft: '30%',
