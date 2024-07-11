@@ -317,11 +317,12 @@ function App() {
                   </li>
                   <br />
                   <li>
-                    You can view specific progress on individual structural components:{' '}
-                    <b>Complete or Incomplete</b>.<br />
+                    You can view either <b>Complete</b> or <b>Incomplete</b> progress on individual
+                    structural components over the map. Please click it in the chart series.
+                    <br />
                     <li>
-                      Click either 'Complete' or 'Incomplete' in the chart series. To reset the
-                      chart filtering, please double-lick the <b>'Reset Chart Filter'</b> button.
+                      To reset the chart filtering, please double-lick the{' '}
+                      <b>'Reset Chart Filter'</b> button.
                     </li>
                   </li>
                   <br />
