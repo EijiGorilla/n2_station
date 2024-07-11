@@ -9,6 +9,7 @@ import '@esri/calcite-components/dist/components/calcite-list';
 import '@esri/calcite-components/dist/components/calcite-list-item';
 import '@esri/calcite-components/dist/components/calcite-shell-panel';
 import '@esri/calcite-components/dist/components/calcite-action';
+import '@esri/calcite-components/dist/components/calcite-button';
 import '@esri/calcite-components/dist/components/calcite-action-bar';
 import '@esri/calcite-components/dist/calcite/calcite.css';
 import {
@@ -21,6 +22,7 @@ import {
   CalcitePanel,
   CalciteList,
   CalciteListItem,
+  CalciteButton,
 } from '@esri/calcite-components-react';
 import Chart from './components/Chart';
 import { dropdownData } from './dropdownData';
@@ -127,6 +129,44 @@ function App() {
       basemaps.container = calcitePanelBasemaps.current;
       layerList.container = layerListDiv.current;
     }
+  }, []);
+
+  useEffect(() => {
+    // Look around animation
+    let abort: any = false;
+    let center: any = null;
+    const play = document.querySelector(`[id=play]`) as HTMLDivElement;
+    const pause = document.querySelector(`[id=pause]`) as HTMLDivElement;
+
+    view.when(() => {
+      view.ui.add(play, 'top-right');
+      view.ui.add(pause, 'top-right');
+    });
+
+    function rotate() {
+      if (!view.interacting && !abort) {
+        play.style.display = 'none';
+        pause.style.display = 'block';
+        center = center || view.center;
+        view.goTo(
+          {
+            heading: view.camera.heading + 0.2,
+            center,
+          },
+          { animate: false },
+        );
+        requestAnimationFrame(rotate);
+      } else {
+        abort = false;
+        center = null;
+        play.style.display = 'block';
+        pause.style.display = 'none';
+      }
+    } // end
+    play.onclick = rotate;
+    pause.onclick = function () {
+      abort = true;
+    };
   }, []);
 
   // Style CSS
@@ -361,8 +401,10 @@ function App() {
           Off
         </div>
 
-        <div className="mapDiv" ref={mapDiv}></div>
+        <CalciteButton iconEnd="play" id="play"></CalciteButton>
+        <CalciteButton iconEnd="pause" id="pause" style={{ display: 'none' }}></CalciteButton>
 
+        <div className="mapDiv" ref={mapDiv}></div>
         {/* time slider widget */}
         {nextWidget === 'timeslider' && nextWidget !== activeWidget ? (
           <TimeSlider station={!stationName ? '' : stationName.name} />
