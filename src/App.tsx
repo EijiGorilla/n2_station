@@ -222,7 +222,7 @@ function App() {
             <CalciteAction
               data-action-id="layers"
               icon="layers"
-              text="layers"
+              text="Layers"
               id="layers"
               //textEnabled={true}
               onClick={(event: any) => {
@@ -234,7 +234,7 @@ function App() {
             <CalciteAction
               data-action-id="basemaps"
               icon="basemap"
-              text="basemaps"
+              text="Basemaps"
               id="basemaps"
               onClick={(event: any) => {
                 setNextWidget(event.target.id);
@@ -312,16 +312,24 @@ function App() {
               <div className="informationDiv">
                 <ul>
                   <li>
-                    You can <b>filter utility data</b> by contract package, company, and data type:
-                    (point or line).
+                    You can <b>filter station structures</b> by stations using a dropdown list in
+                    the header panel.
                   </li>
                   <br />
                   <li>
-                    <b>Click the bar-chart series</b> to view progress on the respective company and
-                    work status over the map.
+                    You can view specific progress on individual structural components:{' '}
+                    <b>Complete or Incomplete</b>.<br />
+                    <li>
+                      Click either 'Complete' or 'Incomplete' in the chart series. To reset the
+                      chart filtering, please double-lick the <b>'Reset Chart Filter'</b> button.
+                    </li>
                   </li>
                   <br />
-                  <li>Click/unclick widgets icon for viewing Layer list, legend, and basemaps.</li>
+
+                  <li>
+                    Click/unclick widgets icon for viewing Layer list, Legend, and Basemaps in the
+                    action panel.
+                  </li>
                 </ul>
               </div>
             ) : (
