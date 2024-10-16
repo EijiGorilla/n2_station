@@ -432,21 +432,54 @@ const Chart = (props: any) => {
     }
   }, [resetButtonClicked]);
 
+  const primaryLabelColor = '#9ca3af';
+  const valueLabelColor = '#d1d5db';
+
   return (
     <div>
-      <CalciteLabel>TOTAL PROGRESS</CalciteLabel>
+      <div
+        style={{
+          color: primaryLabelColor,
+          fontSize: '1.3rem',
+          marginLeft: '13px',
+          marginTop: '10px',
+          marginBottom: '-10px',
+        }}
+      >
+        Total Progress
+      </div>
       <CalciteLabel layout="inline">
-        <b className="totalProgressNumber">
+        <div
+          style={{
+            color: valueLabelColor,
+            fontSize: '2.5rem',
+            fontWeight: 'bold',
+            fontFamily: 'calibri',
+            lineHeight: '1.2',
+            marginLeft: '30px',
+          }}
+        >
           {progress[2]} %
-          <img
-            src="https://EijiGorilla.github.io/Symbols/Station_Structures_icon.png"
-            alt="Utility Logo"
-            height={'29%'}
-            width={'29%'}
-            style={{ marginLeft: '90%', display: 'flex', marginTop: '-17%' }}
-          />
-          <div className="totalProgressNumber2">({thousands_separators(progress[0])})</div>
-        </b>
+        </div>
+
+        <img
+          src="https://EijiGorilla.github.io/Symbols/Station_Structures_icon.png"
+          alt="Utility Logo"
+          height={'60px'}
+          width={'60px'}
+          style={{ marginLeft: '250px', display: 'flex', marginTop: '-17%' }}
+        />
+        <div
+          style={{
+            color: valueLabelColor,
+            fontSize: '1rem',
+            fontFamily: 'calibri',
+            lineHeight: '1.2',
+            marginLeft: '30px',
+          }}
+        >
+          ({thousands_separators(progress[0])})
+        </div>
       </CalciteLabel>
 
       <div
