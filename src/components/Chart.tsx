@@ -456,7 +456,7 @@ const Chart = (props: any) => {
             fontWeight: 'bold',
             fontFamily: 'calibri',
             lineHeight: '1.2',
-            marginLeft: '30px',
+            marginLeft: '15px',
           }}
         >
           {progress[2]} %
@@ -465,27 +465,27 @@ const Chart = (props: any) => {
         <img
           src="https://EijiGorilla.github.io/Symbols/Station_Structures_icon.png"
           alt="Utility Logo"
-          height={'60px'}
-          width={'60px'}
-          style={{ marginLeft: '250px', display: 'flex', marginTop: '-17%' }}
+          height={'50px'}
+          width={'50px'}
+          style={{ marginLeft: '100px', display: 'flex' }}
         />
-        <div
-          style={{
-            color: valueLabelColor,
-            fontSize: '1rem',
-            fontFamily: 'calibri',
-            lineHeight: '1.2',
-            marginLeft: '30px',
-          }}
-        >
-          ({thousands_separators(progress[0])})
-        </div>
       </CalciteLabel>
+      <div
+        style={{
+          color: valueLabelColor,
+          fontSize: '1rem',
+          fontFamily: 'calibri',
+          lineHeight: '1.2',
+          marginLeft: '30px',
+        }}
+      >
+        ({thousands_separators(progress[0])})
+      </div>
 
       <div
         id={chartID}
         style={{
-          width: '22vw',
+          width: '330px',
           height: '60vh',
           backgroundColor: 'rgb(0,0,0,0)',
           color: 'white',

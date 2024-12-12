@@ -197,7 +197,7 @@ function App() {
   return (
     <>
       <CalciteShell>
-        <CalciteTabs slot="panel-end" layout="center" scale="m">
+        <CalciteTabs slot="panel-end" layout="center" scale="l">
           {buildingLayerLoaded === 'loaded' ? (
             <Chart station={!stationName ? '' : stationName.name} />
           ) : (
